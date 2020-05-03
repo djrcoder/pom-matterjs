@@ -5,6 +5,8 @@ document.body.appendChild(canvasContainer);
 var statsContainer = document.createElement('div');
 canvasContainer.appendChild(statsContainer);
 
+var titleEl = document.getElementById("ball-title");
+
 
 let startTime = 1500000
 let ballDrop = false;
@@ -30,12 +32,19 @@ function startTheTimer() {
 function countDown() {
 
     console.log("Remaining", startTime)
-    statsContainer.textContent = (25 - balls) + " minutes remaining!";;
+
+    if (balls === 24) {
+        statsContainer.textContent = "Less than 1 minute remaining!";
+    } else {
+        statsContainer.textContent = (25 - (balls + 1)) + " minutes remaining!";
+    }
 
     if (startTime === 0) {
         clearInterval(stopDropping);
         gong.play();
         window.alert("Time's up!")
+        statsContainer.textContent = "All done!";
+
     } else {
 
         startTime = startTime - 60000;
@@ -125,8 +134,21 @@ function makeTheThingsDance() {
     Events.on(engine, 'afterUpdate', function () {
 
 
-        const titleEl = document.getElementById("ball-title");
-        titleEl.textContent = (25 - balls) + " remaining!";
+
+
+        if (balls === 25) {
+            titleEl.textContent = "Less than 1 minute remaining!";
+
+        }
+
+        if (balls === 0) {
+            titleEl.textContent = "Take a break!"
+        }
+
+        else {
+            titleEl.textContent = (25 - balls) + " minutes remaining!";
+        }
+
 
         if (ballDrop === true) {
 
