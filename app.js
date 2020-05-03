@@ -1,7 +1,9 @@
 
 var canvasContainer = document.createElement('div')
-// context = canvas.getContext('2d');
 document.body.appendChild(canvasContainer);
+
+var statsContainer = document.createElement('div');
+canvasContainer.appendChild(statsContainer);
 
 
 let startTime = 1500000
@@ -13,14 +15,9 @@ var waterDrop = new Audio('./sound/drop.mp3');
 
 makeTheThingsDance()
 
-
-
 function startTheTimer() {
     console.log("Started")
     gong.play()
-
-
-    // stopDropping
 
     countDown()
 
@@ -30,12 +27,10 @@ function startTheTimer() {
 
 }
 
-
-
 function countDown() {
 
     console.log("Remaining", startTime)
-
+    statsContainer.textContent = (25 - balls) + " minutes remaining!";;
 
     if (startTime === 0) {
         clearInterval(stopDropping);
@@ -49,7 +44,6 @@ function countDown() {
     }
 }
 
-
 function makeTheThingsDance() {
 
     var bodyArray = [];
@@ -61,22 +55,10 @@ function makeTheThingsDance() {
         Mouse = Matter.Mouse,
         World = Matter.World,
         Bodies = Matter.Bodies,
-        Common = Matter.Common,
-        Axes = Matter.Axes,
-        Composites = Matter.Composites,
         Events = Matter.Events;
 
-    // create an engine
+
     var engine = Engine.create(document.getElementById('canvas-container'));
-
-    // create a renderer
-    // var render = Render.create({
-    //     element: document.body,
-    //     engine: engine
-    // });
-
-
-
 
     var render = Render.create({
         element: canvasContainer,
@@ -92,19 +74,13 @@ function makeTheThingsDance() {
 
     Render.run(render);
 
-    // var topH = Bodies.rectangle(400, 0, 800, 50, {
-    //     isStatic: true,
-    //     // render: {
-    //     //     fillStyle: 'transparent'
-    //     // }
-    // });
-    var top = Bodies.rectangle(450, 125, 500, 50, {
-        isStatic: true,
-        render: {
-            fillStyle: 'transparent'
-        }
 
-    });
+    // var top = Bodies.rectangle(450, 125, 500, 50, {
+    //     isStatic: true,
+    //     render: {
+    //         fillStyle: 'transparent'
+    //     }
+    // });
 
 
 
@@ -138,48 +114,12 @@ function makeTheThingsDance() {
     });
 
 
-    // x, y, radius
-
-
-
-
-
-
-    bodyArray.push(sideLeft, sideRight, bottom)
-
-    // for (const item of responseArray) {
-
-    //     const rand = randomNum(0, 600)
-    //     foodArray.push(Bodies.rectangle(rand, 100, 80, 80, {
-    //         render: {
-    //             sprite: {
-    //                 texture: item
-    //             }
-    //         },
-    //         angle: 90
-    //     }
-    //     ));
-    // }
-
-
-    // foodArray.push(bottom)
-
+    bodyArray.push(bottom, sideLeft, sideRight)
 
 
     bottom.restitution = 1.0;
-    // topH.restitution = 1.0;
     sideLeft.restitution = 1.0;
     sideRight.restitution = 1.0;
-
-
-
-
-
-    // setInterval(function () {
-    //     World.add(engine.world, [timeBall2]);
-    // }, 2000)
-
-
 
 
     Events.on(engine, 'afterUpdate', function () {
@@ -190,12 +130,7 @@ function makeTheThingsDance() {
 
         if (ballDrop === true) {
 
-            var timeBall2 = Bodies.circle(350, 80, 40, {
-
-            })
-
-
-            // World.add(engine.world, timeBall2);
+            var timeBall2 = Bodies.circle(350, 80, 40, {})
 
             World.add(engine.world, [timeBall2]);
             waterDrop.play();
@@ -203,14 +138,6 @@ function makeTheThingsDance() {
             balls++
             console.log("Balls dropped", balls)
         }
-
-
-
-
-
-
-
-
     });
 
 
@@ -230,12 +157,7 @@ function makeTheThingsDance() {
 
     // keep the mouse in sync with rendering
     render.mouse = mouse;
-
-
-
     World.add(engine.world, bodyArray)
-
-
 
     // run the engine
     Engine.run(engine);
