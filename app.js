@@ -10,6 +10,7 @@ statsContainer.appendChild(statsContent);
 
 
 var titleEl = document.getElementById("ball-title");
+var startButton = document.getElementById("starter-button")
 
 
 let startTime = 1500000
@@ -19,30 +20,53 @@ var timerStarted = false;
 var stopDropping;
 var gong = new Audio('./sound/gong.mp3');
 var waterDrop = new Audio('./sound/drop.mp3');
+var pomodoroComplete = false;
+
 
 
 makeTheThingsDance()
 
 function startTheTimer() {
 
-    if (timerStarted === false) {
+    // check if pomodoroComplete and reset everything
+
+    if (pomodoroComplete === true) {
+
+        balls = 0;
+        startTime = 1500000;
+        timerStarted = false;
+        ballDrop = false;
+        pomodoroComplete = false;
+
+    }
+
+    if (timerStarted === false && pomodoroComplete === false) {
+
         timerStarted = true;
         console.log("Started")
+        startButton.textContent = "Let the balls drop!"
         gong.play()
 
         countDown()
 
-        // stopDropping = setInterval(function () {
-        //     countDown()
-        // }, 60000)
+        console.log("Vercel!")
 
         stopDropping = setInterval(function () {
             countDown()
-        }, 500)
+        }, 60000)
+
+        // stopDropping = setInterval(function () {
+        //     countDown()
+        // }, 600)
     }
 }
 
+function rando(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 function countDown() {
+
 
     console.log("Remaining", startTime)
 
@@ -58,6 +82,9 @@ function countDown() {
         statsContent.textContent = "All done!";
         titleEl.textContent = "Take a break!"
         timerStarted = false;
+        pomodoroComplete = true;
+        startButton.textContent = "Start another round?"
+
 
     } else {
         statsContent.textContent = (25 - (balls + 1)) + " minutes remaining!";
@@ -139,6 +166,7 @@ function makeTheThingsDance() {
     });
 
 
+
     bodyArray.push(bottom, sideLeft, sideRight)
 
 
@@ -147,14 +175,16 @@ function makeTheThingsDance() {
     sideRight.restitution = 1.0;
 
 
-    Events.on(engine, 'afterUpdate', function () {
+    Events.on(engine, 'beforeUpdate', function () {
 
 
         if (ballDrop === true) {
 
             titleEl.textContent = (25 - balls) + " minutes remaining!";
 
-            var timeBall2 = Bodies.circle(350, 80, 40, {
+            const rand = rando(150, 450)
+
+            var timeBall2 = Bodies.circle(rand, 80, 40, {
                 render: {
                     sprite: {
                         texture: './img/oaky.png'
@@ -163,12 +193,15 @@ function makeTheThingsDance() {
 
             })
 
+
             World.add(engine.world, [timeBall2]);
             waterDrop.play();
             ballDrop = false;
             // balls++
             console.log("Balls dropped", balls)
         }
+
+        // console.log(Bodies)
     });
 
 
@@ -184,6 +217,8 @@ function makeTheThingsDance() {
             }
         });
 
+
+
     World.add(engine.world, mouseConstraint);
 
     // keep the mouse in sync with rendering
@@ -195,5 +230,7 @@ function makeTheThingsDance() {
 
     // run the renderer
     Render.run(render);
+
+
 }
 
