@@ -5,28 +5,41 @@ document.body.appendChild(canvasContainer);
 var statsContainer = document.createElement('div');
 canvasContainer.appendChild(statsContainer);
 
+var statsContent = document.createElement('h2');
+statsContainer.appendChild(statsContent);
+
+
 var titleEl = document.getElementById("ball-title");
 
 
 let startTime = 1500000
 let ballDrop = false;
 let balls = 0;
+var timerStarted = false;
 var stopDropping;
 var gong = new Audio('./sound/gong.mp3');
 var waterDrop = new Audio('./sound/drop.mp3');
 
+
 makeTheThingsDance()
 
 function startTheTimer() {
-    console.log("Started")
-    gong.play()
 
-    countDown()
+    if (timerStarted === false) {
+        timerStarted = true;
+        console.log("Started")
+        gong.play()
 
-    stopDropping = setInterval(function () {
         countDown()
-    }, 60000)
 
+        // stopDropping = setInterval(function () {
+        //     countDown()
+        // }, 60000)
+
+        stopDropping = setInterval(function () {
+            countDown()
+        }, 500)
+    }
 }
 
 function countDown() {
@@ -34,22 +47,25 @@ function countDown() {
     console.log("Remaining", startTime)
 
     if (balls === 24) {
-        statsContainer.textContent = "Less than 1 minute remaining!";
-    } else {
-        statsContainer.textContent = (25 - (balls + 1)) + " minutes remaining!";
+        statsContent.textContent = "Less than 1 minute remaining!";
+        titleEl.textContent = "Less than 1 minute remaining!"
     }
 
     if (startTime === 0) {
         clearInterval(stopDropping);
         gong.play();
         window.alert("Time's up!")
-        statsContainer.textContent = "All done!";
+        statsContent.textContent = "All done!";
+        titleEl.textContent = "Take a break!"
+        timerStarted = false;
 
     } else {
-
+        statsContent.textContent = (25 - (balls + 1)) + " minutes remaining!";
+        // startTime = startTime - 60000; -----> real time!
         startTime = startTime - 60000;
         console.log(startTime);
         ballDrop = true;
+        balls++;
     }
 }
 
@@ -134,30 +150,23 @@ function makeTheThingsDance() {
     Events.on(engine, 'afterUpdate', function () {
 
 
-
-
-        if (balls === 25) {
-            titleEl.textContent = "Less than 1 minute remaining!";
-
-        }
-
-        if (balls === 0) {
-            titleEl.textContent = "Take a break!"
-        }
-
-        else {
-            titleEl.textContent = (25 - balls) + " minutes remaining!";
-        }
-
-
         if (ballDrop === true) {
 
-            var timeBall2 = Bodies.circle(350, 80, 40, {})
+            titleEl.textContent = (25 - balls) + " minutes remaining!";
+
+            var timeBall2 = Bodies.circle(350, 80, 40, {
+                render: {
+                    sprite: {
+                        texture: './img/oaky.png'
+                    }
+                }
+
+            })
 
             World.add(engine.world, [timeBall2]);
             waterDrop.play();
             ballDrop = false;
-            balls++
+            // balls++
             console.log("Balls dropped", balls)
         }
     });
