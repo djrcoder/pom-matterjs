@@ -13,6 +13,8 @@ var titleEl = document.getElementById("ball-title");
 var startButton = document.getElementById("starter-button")
 
 
+
+
 let startTime = 1500000
 let ballDrop = false;
 let balls = 0;
@@ -21,6 +23,7 @@ var stopDropping;
 var gong = new Audio('./sound/gong.mp3');
 var waterDrop = new Audio('./sound/drop.mp3');
 var pomodoroComplete = false;
+var testingArray = [];
 
 
 
@@ -49,7 +52,6 @@ function startTheTimer() {
 
         countDown()
 
-        console.log("Vercel!")
 
         stopDropping = setInterval(function () {
             countDown()
@@ -96,6 +98,10 @@ function countDown() {
     }
 }
 
+// function checkForInactiveTab() {
+
+// }
+
 function makeTheThingsDance() {
 
     var bodyArray = [];
@@ -124,7 +130,7 @@ function makeTheThingsDance() {
         }
     });
 
-    Render.run(render);
+    // Render.run(render);
 
 
     // var top = Bodies.rectangle(450, 125, 500, 50, {
@@ -194,7 +200,8 @@ function makeTheThingsDance() {
             })
 
 
-            World.add(engine.world, [timeBall2]);
+            World.add(engine.world, timeBall2);
+            // bodyArray.push(timeBall2)
             waterDrop.play();
             ballDrop = false;
             // balls++
